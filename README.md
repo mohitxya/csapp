@@ -1,8 +1,8 @@
-#### Computing Systems: A Programmer's Perspective
+### Computing Systems: A Programmer's Perspective
 - Solutions to the labs assigned in the course: CMU 15-213.
 
 
-Progress:
+#### Progress:
 1. Data Lab: 10/13
 2. Bomb Lab: 
 3. Attack Lab:
