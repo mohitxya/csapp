@@ -342,10 +342,40 @@ unsigned floatScale2(unsigned uf) {
  *   Rating: 4
  */
 int floatFloat2Int(unsigned uf) {
-  unsigned sign = uf & 0x80000000;     // sign bit
-  unsigned exp  = (uf >> 23) & 0xFF;   // exponent
-  unsigned frac = uf & 0x7FFFFF;       // fraction
-  return 2;
+    unsigned sign = uf >> 31;
+    unsigned exp  = (uf >> 23) & 0xFF;
+    unsigned frac = uf & 0x7FFFFF;
+
+    int E = exp - 127; // unbiased exponent
+    unsigned M;
+
+    if (exp == 0) {
+        // Denormals or 0
+        return 0;
+    }
+    if (exp == 255) {
+        // NaN or infinity
+        return 0x80000000u;
+    }
+
+    // Normalized mantissa
+    M = frac | 0x800000;
+
+    int val;
+    if (E < 0) {
+        return 0; // |value| < 1
+    }
+    if (E > 31) {// any more and we'll run out of bits, we already have 24, max more is 8.
+        return 0x80000000u; // Overflow
+    }
+    if (E > 23) {
+        val = M << (E - 23);
+    } else {
+        val = M >> (23 - E);
+    }
+
+    if (sign) val = -val;
+    return val;
 }
 /* 
  * floatPower2 - Return bit-level equivalent of the expression 2.0^x
@@ -361,5 +391,19 @@ int floatFloat2Int(unsigned uf) {
  *   Rating: 4
  */
 unsigned floatPower2(int x) {
-    return 2;
+    unsigned exp, frac;
+
+    if (x < -149) {
+        return 0;
+    } 
+    else if (x < -126) {
+        return 1u << (x + 149);
+    } 
+    else if (x <= 127) {
+        exp = x + 127;
+        return exp << 23;
+    } 
+    else {
+        return 0x7f800000u;
+    }
 }
