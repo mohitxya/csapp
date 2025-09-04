@@ -3,7 +3,7 @@
 
 
 #### Progress:
-1. Data Lab: 10/13
+1. Data Lab: 13/13
 2. Bomb Lab: 
 3. Attack Lab:
 4. Buffer Lab: 
